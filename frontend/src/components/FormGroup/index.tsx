@@ -15,7 +15,9 @@ export const FormGroup = () => {
     if (event) setValue(event.target.value);
   };
 
-  const sendRequest = () => {};
+  const sendClassification = () => {};
+
+  const sendSkipClassification = () => {};
 
   return (
       <FormControl component="fieldset" required={true} sx={{'width': '100%'}}>
@@ -48,14 +50,22 @@ export const FormGroup = () => {
           />
         </RadioGroup>
         <Button
-          type="submit"
           size='large'
           disableElevation={true}
           variant="contained"
           sx={{ 'marginTop': '20px' }}
-          onClick={sendRequest}
+          onClick={sendClassification}
           disabled={(value === "") ? true : false}>
           Confirmar
+        </Button>
+
+        <Button
+          size='large'
+          disableElevation={true}
+          variant="text"
+          sx={{ 'marginTop': '20px' }}
+          onClick={sendSkipClassification}>
+          Pular
         </Button>
       </FormControl>
   );
