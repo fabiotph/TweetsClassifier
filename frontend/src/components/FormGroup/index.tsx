@@ -1,6 +1,8 @@
 import { RadioGroup, FormControlLabel, FormLabel, FormControl, Button, FormHelperText } from '@mui/material'
 import { useState } from 'react';
 import { RadioLabel, Radio } from './styles';
+import { URL_BACKEND } from '../../config';
+import axios from 'axios';
 
 const sxRadio = {
   '& .MuiSvgIcon-root': {
@@ -8,16 +10,29 @@ const sxRadio = {
   },
 }
 
-export const FormGroup = () => {
-  const [value, setValue] = useState<string>('');
+interface IFormGroup {
+  currentTweetId: string;
+  onSubmit: () => void;
+}
+
+export const FormGroup = (props: IFormGroup) => {
+  const { currentTweetId, onSubmit } = props;
+
+  const [classification, setClassification] = useState<string>('');
 
   const handleRadioChange = (event: any) => {
-    if (event) setValue(event.target.value);
+    if (event) setClassification(event.target.value);
   };
 
-  const sendClassification = () => {};
+  const sendClassification = async ({skip} = {skip: false}) => {
+    const { data, status } = await axios.post(`${URL_BACKEND}/classification`, {
+      tweet_id: currentTweetId,
+      classification: skip ? "" : classification,
+    });
 
-  const sendSkipClassification = () => {};
+    if(status === 200)
+      onSubmit();
+  };
 
   return (
       <FormControl component="fieldset" required={true} sx={{'width': '100%'}}>
@@ -54,8 +69,8 @@ export const FormGroup = () => {
           disableElevation={true}
           variant="contained"
           sx={{ 'marginTop': '20px' }}
-          onClick={sendClassification}
-          disabled={(value === "") ? true : false}>
+          onClick={() => sendClassification()}
+          disabled={(classification === "") ? true : false}>
           Confirmar
         </Button>
 
@@ -64,7 +79,7 @@ export const FormGroup = () => {
           disableElevation={true}
           variant="text"
           sx={{ 'marginTop': '20px' }}
-          onClick={sendSkipClassification}>
+          onClick={() => sendClassification({skip: true})}>
           Pular
         </Button>
       </FormControl>

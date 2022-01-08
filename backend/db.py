@@ -21,6 +21,7 @@ class DB:
       tweet = self.cache.pop(str(id))
       if not len(tweet):
          raise Exception("Tweet alredy classified or not exists")
+      self.value += 1
       print(repr(tweet["text"]))
       new_row = {
          'tweet_id': str(id), 
@@ -40,5 +41,4 @@ class DB:
    def get_tweet(self):
       tweet = self.data.iloc[self.value]
       self.cache[str(tweet['tweet_id'])] = tweet
-      self.value += 1
       return tweet
